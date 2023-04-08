@@ -2,13 +2,13 @@ package actuator
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
 	"runtime/pprof"
 	"testing"
 
-	jsoniter "github.com/json-iterator/go"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +35,7 @@ func setupMuxWithConfigAndGetResponseForMethod(t *testing.T, config *Config, met
 }
 
 func getTypedJSONBody(t *testing.T, body *bytes.Buffer, v interface{}) {
-	decoder := jsoniter.NewDecoder(bytes.NewReader(body.Bytes()))
+	decoder := json.NewDecoder(bytes.NewReader(body.Bytes()))
 	err := decoder.Decode(v)
 	assert.NoError(t, err)
 }

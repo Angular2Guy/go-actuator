@@ -2,10 +2,9 @@ package actuator
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"strings"
-
-	jsoniter "github.com/json-iterator/go"
 )
 
 // isValidEndpoint is used to check if the endpoint is valid or not
@@ -21,7 +20,7 @@ func isValidEndpoint(endpoint int) bool {
 // encodeJSON is used to encode any type of data to byte array
 func encodeJSON(v interface{}) ([]byte, error) {
 	var buffer bytes.Buffer
-	e := jsoniter.NewEncoder(&buffer)
+	e := json.NewEncoder(&buffer)
 	err := e.Encode(v)
 	if err != nil {
 		return nil, err

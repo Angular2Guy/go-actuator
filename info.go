@@ -25,14 +25,9 @@ func getInfo(config *Config) map[string]interface{} {
 			versionKey: config.Version,
 		},
 		gitKey: map[string]string{
-			buildStampKey:       BuildStamp,
-			gitCommitAuthorKey:  GitCommitAuthor,
-			gitCommitIDKey:      GitCommitID,
-			gitCommitTimeKey:    GitCommitTime,
-			gitPrimaryBranchKey: GitPrimaryBranch,
-			gitURLKey:           GitURL,
-			hostNameKey:         HostName,
-			usernameKey:         Username,
+			buildStampKey: BuildStamp,
+			hostNameKey:   HostName,
+			usernameKey:   Username,
 		},
 		runtimeKey: map[string]interface{}{
 			archKey:           runtime.GOARCH,
