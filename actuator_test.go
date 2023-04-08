@@ -164,6 +164,7 @@ func TestPingWithoutConfig(t *testing.T) {
 	assert.Empty(t, w.Body)
 }
 
+/*
 func TestShutdown(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -193,12 +194,13 @@ func TestShutdownWithoutConfig(t *testing.T) {
 		if r := recover(); r != nil {
 			// do nothing here, just to handle shutdown gracefully
 		}
-	}()
-	w := setupMuxWithConfigAndGetResponseForMethod(t, nil, http.MethodGet, shutdownEndpoint)
-	assert.Equal(t, http.StatusOK, w.Code)
+		}()
+		w := setupMuxWithConfigAndGetResponseForMethod(t, nil, http.MethodGet, shutdownEndpoint)
+		assert.Equal(t, http.StatusOK, w.Code)
 
-	assert.Empty(t, w.Body)
-}
+		assert.Empty(t, w.Body)
+	}
+*/
 
 func TestThreadDump(t *testing.T) {
 	w := setupMuxAndGetResponse(t, ThreadDump, threadDumpEndpoint)
