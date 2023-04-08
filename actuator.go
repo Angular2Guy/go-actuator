@@ -11,12 +11,12 @@ const (
 	Info
 	Metrics
 	Ping
-	Shutdown
+	//Shutdown
 	ThreadDump
 )
 
 // AllEndpoints is the list of endpoints supported
-var AllEndpoints = []int{Env, Info, Metrics, Ping, Shutdown, ThreadDump}
+var AllEndpoints = []int{Env, Info, Metrics, Ping /*Shutdown,*/, ThreadDump}
 
 // Config is the set of configurable parameters for the actuator setup
 type Config struct {
@@ -85,8 +85,8 @@ func getHandlerMap(config *Config) map[string]http.HandlerFunc {
 			handlerMap[metricsEndpoint] = handleMetrics
 		case Ping:
 			handlerMap[pingEndpoint] = handlePing
-		case Shutdown:
-			handlerMap[shutdownEndpoint] = handleShutdown
+		// case Shutdown:
+		// 	handlerMap[shutdownEndpoint] = handleShutdown
 		case ThreadDump:
 			handlerMap[threadDumpEndpoint] = handleThreadDump
 		}
