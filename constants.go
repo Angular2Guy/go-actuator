@@ -9,6 +9,7 @@ const (
 	equals            = "="
 	gitKey            = "git"
 	goRoutinesKey     = "goroutine"
+	threadsKey        = "threadcreate"
 	hostNameKey       = "hostName"
 	nameKey           = "name"
 	portKey           = "port"
@@ -22,12 +23,13 @@ const (
 
 // Endpoints
 const (
-	envEndpoint        = "/env"
-	infoEndpoint       = "/info"
-	metricsEndpoint    = "/metrics"
-	pingEndpoint       = "/ping"
-	shutdownEndpoint   = "/shutdown"
-	threadDumpEndpoint = "/threadDump"
+	envEndpoint     = "/env"
+	infoEndpoint    = "/info"
+	metricsEndpoint = "/metrics"
+	pingEndpoint    = "/ping"
+	//shutdownEndpoint   = "/shutdown"
+	goRoutineDumpEndpoint = "/goroutineDump"
+	threadDumpEndpoint    = "/threadDump"
 )
 
 // Response constants

@@ -3,6 +3,7 @@ package actuator
 import (
 	"net/http"
 	"runtime"
+	"runtime/pprof"
 )
 
 // BySizeElement reports per-size class allocation statistics.
@@ -220,14 +221,20 @@ type MemStats struct {
 	BySize []BySizeElement
 }
 
+type CpuStats struct {
+	NumCpu int
+}
+
 // MetricsResponse is the response for the metrics endpoint
 type MetricsResponse struct {
 	MemStats MemStats `json:"memory"`
+	CpuStats CpuStats `json:"cpu"`
 }
 
 func getRuntimeMetrics() MetricsResponse {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
+	pprof.Lookup("threadcreate")
 
 	bySize := make([]BySizeElement, 0, len(memStats.BySize))
 	for _, size := range memStats.BySize {
@@ -272,6 +279,9 @@ func getRuntimeMetrics() MetricsResponse {
 			EnableGC:      memStats.EnableGC,
 			DebugGC:       memStats.DebugGC,
 			BySize:        bySize,
+		},
+		CpuStats: CpuStats{
+			NumCpu: runtime.NumCPU(),
 		},
 	}
 }

@@ -238,6 +238,42 @@ func TestThreadDumpWithError(t *testing.T) {
 	assert.Equal(t, profileNotFoundError, w.Body.String())
 }
 
+func TestGoRoutineDump(t *testing.T) {
+	w := setupMuxAndGetResponse(t, GoRoutineDump, goRoutineDumpEndpoint)
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	assert.NotEmpty(t, w.Body)
+}
+
+func TestGoRoutineDumpConfigured(t *testing.T) {
+	w := setupMuxAndGetResponse(t, Info, goRoutineDumpEndpoint)
+	assert.Equal(t, http.StatusNotFound, w.Code)
+	assert.Equal(t, notFoundError, w.Body.String())
+}
+
+func TestGoRoutineDumpInvalidMethod(t *testing.T) {
+	w := setupMuxWithConfigAndGetResponseForMethod(t, &Config{Endpoints: []int{ThreadDump}}, http.MethodHead, goRoutineDumpEndpoint)
+	assert.Equal(t, http.StatusMethodNotAllowed, w.Code)
+	assert.Equal(t, methodNotAllowedError, w.Body.String())
+}
+
+func TestGoRoutineDumpWithoutConfig(t *testing.T) {
+	w := setupMuxWithConfigAndGetResponseForMethod(t, nil, http.MethodGet, goRoutineDumpEndpoint)
+	assert.Equal(t, http.StatusOK, w.Code)
+
+	assert.NotEmpty(t, w.Body)
+}
+
+func TestGoRoutineDumpWithError(t *testing.T) {
+	mockPprofLookupWithError()
+	defer unMockPprofLookup()
+
+	w := setupMuxAndGetResponse(t, ThreadDump, threadDumpEndpoint)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
+
+	assert.Equal(t, profileNotFoundError, w.Body.String())
+}
+
 func TestGetLastStringAfterDelim(t *testing.T) {
 	assert.Equal(t, "", getLastStringAfterDelimiter("", slash))
 	assert.Equal(t, "a", getLastStringAfterDelimiter("a", slash))

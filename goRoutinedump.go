@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-func getThreadDump() ([]byte, error) {
+func getGoRoutineDump() ([]byte, error) {
 	var buffer bytes.Buffer
-	profile := pprofLookupFunction(threadsKey)
+	profile := pprofLookupFunction(goRoutinesKey)
 	if profile == nil {
 		return nil, errors.New(profileNotFoundError)
 	}
@@ -20,7 +20,7 @@ func getThreadDump() ([]byte, error) {
 }
 
 // handleThreadDump is the handler to get the thread dump
-func handleThreadDump(writer http.ResponseWriter, requestRef *http.Request) {
-	body, err := getThreadDump()
+func handleGoRoutineDump(writer http.ResponseWriter, requestRef *http.Request) {
+	body, err := getGoRoutineDump()
 	HandleDump(body, err, writer, requestRef)
 }
