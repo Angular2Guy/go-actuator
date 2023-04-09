@@ -2,18 +2,18 @@ package actuator
 
 import (
 	"net/http"
-	"os"
-	"strings"
 )
 
 func getEnvironmentVariables(config *Config) map[string]string {
 	variables := make(map[string]string)
-	for _, e := range os.Environ() {
-		keyValue := strings.SplitN(e, equals, 2)
-		if len(keyValue) == 2 {
-			variables[keyValue[0]] = keyValue[1]
+	/*
+		for _, e := range os.Environ() {
+			keyValue := strings.SplitN(e, equals, 2)
+			if len(keyValue) == 2 {
+				variables[keyValue[0]] = keyValue[1]
+			}
 		}
-	}
+	*/
 	variables[EnvKey] = config.Env
 	return variables
 }
