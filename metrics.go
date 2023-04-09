@@ -225,19 +225,19 @@ type MemStats struct {
 }
 
 type CpuStats struct {
-	NumCpu int
+	NumCpu int `json:"numCpu"`
 }
 
 type ThreadStats struct {
-	GoRoutines int
-	Threads    int
+	GoRoutines int `json:"goRoutines"`
+	Threads    int `json:"threads"`
 }
 
 // MetricsResponse is the response for the metrics endpoint
 type MetricsResponse struct {
-	MemStats    MemStats    `json:"memory"`
 	CpuStats    CpuStats    `json:"cpu"`
 	ThreadStats ThreadStats `json:"threadstats"`
+	MemStats    MemStats    `json:"memory"`
 }
 
 func getRuntimeMetrics() MetricsResponse {
