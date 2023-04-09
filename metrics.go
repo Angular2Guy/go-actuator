@@ -1,9 +1,12 @@
 package actuator
 
 import (
+	"bytes"
 	"net/http"
 	"runtime"
 	"runtime/pprof"
+	"strconv"
+	"strings"
 )
 
 // BySizeElement reports per-size class allocation statistics.
@@ -225,16 +228,21 @@ type CpuStats struct {
 	NumCpu int
 }
 
+type ThreadStats struct {
+	GoRoutines int
+	Threads    int
+}
+
 // MetricsResponse is the response for the metrics endpoint
 type MetricsResponse struct {
-	MemStats MemStats `json:"memory"`
-	CpuStats CpuStats `json:"cpu"`
+	MemStats    MemStats    `json:"memory"`
+	CpuStats    CpuStats    `json:"cpu"`
+	ThreadStats ThreadStats `json:"threadstats"`
 }
 
 func getRuntimeMetrics() MetricsResponse {
 	var memStats runtime.MemStats
 	runtime.ReadMemStats(&memStats)
-	pprof.Lookup("threadcreate")
 
 	bySize := make([]BySizeElement, 0, len(memStats.BySize))
 	for _, size := range memStats.BySize {
@@ -283,7 +291,40 @@ func getRuntimeMetrics() MetricsResponse {
 		CpuStats: CpuStats{
 			NumCpu: runtime.NumCPU(),
 		},
+		ThreadStats: ThreadStats{
+			GoRoutines: getGoRoutineNum(),
+			Threads:    getThreadNum(),
+		},
 	}
+}
+
+func getThreadNum() int {
+	return readNumber(pprofLookupFunction(threadsKey))
+}
+
+func getGoRoutineNum() int {
+	return readNumber(pprofLookupFunction(goRoutinesKey))
+}
+
+func readNumber(profile *pprof.Profile) int {
+	result := 0
+	var buffer bytes.Buffer
+	if profile == nil {
+		return result
+	}
+	err := profile.WriteTo(&buffer, 1)
+	if err != nil {
+		return result
+	}
+	dumpStr := string(buffer.Bytes())
+	strArr := strings.Split(strings.ReplaceAll(dumpStr, "\r\n", "\n"), "\n")
+	lineArr := strings.Split(strArr[0], ":")
+	myResult, err := strconv.ParseInt(strings.Split(strings.TrimSpace(lineArr[1]), " ")[1], 10, 0)
+	if err != nil {
+		return result
+	}
+	result = int(myResult)
+	return result
 }
 
 // handleMetrics is the handler function for the metrics endpoint
