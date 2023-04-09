@@ -254,6 +254,13 @@ func getRuntimeMetrics() MetricsResponse {
 	}
 
 	return MetricsResponse{
+		CpuStats: CpuStats{
+			NumCpu: runtime.NumCPU(),
+		},
+		ThreadStats: ThreadStats{
+			GoRoutines: getGoRoutineNum(),
+			Threads:    getThreadNum(),
+		},
 		MemStats: MemStats{
 			Alloc:         memStats.Alloc,
 			TotalAlloc:    memStats.TotalAlloc,
@@ -287,13 +294,6 @@ func getRuntimeMetrics() MetricsResponse {
 			EnableGC:      memStats.EnableGC,
 			DebugGC:       memStats.DebugGC,
 			BySize:        bySize,
-		},
-		CpuStats: CpuStats{
-			NumCpu: runtime.NumCPU(),
-		},
-		ThreadStats: ThreadStats{
-			GoRoutines: getGoRoutineNum(),
-			Threads:    getThreadNum(),
 		},
 	}
 }
